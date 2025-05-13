@@ -158,7 +158,9 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        const paragraphs = text.split(/\n\s*\n/);
+                        // Process text to remove single carriage returns but keep double carriage returns
+                        const processedText = text.replace(/([^\n])\n([^\n])/g, '$1 $2');
+                        const paragraphs = processedText.split(/\n\s*\n/); // Split on double newlines
                         contentDisplay.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
                     }
                 })

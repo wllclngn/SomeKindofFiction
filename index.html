@@ -111,6 +111,21 @@
         body.dark-mode #content-display p.error-message {
             color: #adb5bd;
         }
+
+        .dynamic-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1em;
+        }
+
+        .dynamic-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .dynamic-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -118,6 +133,9 @@
         <h1>Some kind of fiction...</h1>
         <center><i>Work in Progress.</i></center><br />
         <center>By Will Clingan</center><br />
+        <div class="dynamic-link">
+            <a id="last-entry-link" href="#">Read the Last Entry</a>
+        </div>
         <div id="content-display">
             <p class="loading-message">Loading content from Fantasy.txt...</p>
         </div>
@@ -141,6 +159,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const contentDisplay = document.getElementById('content-display');
+            const lastEntryLink = document.getElementById('last-entry-link');
             const owner = 'wllclngn';
             const repo = 'SomeKindofFiction';
             const branch = 'main';
@@ -158,16 +177,34 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        // Process text to remove single carriage returns but keep double carriage returns
-                        const processedText = text.replace(/([^\n])\n([^\n])/g, '$1 $2');
-                        const paragraphs = processedText.split(/\n\s*\n/); // Split on double newlines
-                        contentDisplay.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
+                        const entries = text.split('●').map(entry => entry.trim()).filter(entry => entry);
+
+                        // Create dynamic link to the last entry
+                        const lastEntryIndex = entries.length - 1;
+                        lastEntryLink.href = `?entry=${lastEntryIndex}`;
+                        lastEntryLink.addEventListener('click', (event) => {
+                            event.preventDefault();
+                            renderEntry(entries[lastEntryIndex]);
+                        });
+
+                        // Check URL query parameter to display an entry
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const entryIndex = urlParams.get('entry');
+                        if (entryIndex !== null && entries[entryIndex]) {
+                            renderEntry(entries[entryIndex]);
+                        } else {
+                            renderEntry(entries.join('\n\n')); // Render all entries by default
+                        }
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching Fantasy.txt:', error);
                     contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and that it is accessible.</p>`;
                 });
+
+            function renderEntry(entry) {
+                contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '</p><p>')}</p>`;
+            }
         });
     </script>
 </body>

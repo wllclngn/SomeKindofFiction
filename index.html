@@ -62,6 +62,34 @@
         .dynamic-link a:hover {
             text-decoration: underline;
         }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            body {
+                display: block; /* Allow text to fill the screen */
+                padding: 10px; /* Reduce padding around the content */
+            }
+
+            .container {
+                width: 100%; /* Allow container to fill the screen */
+                margin: 0;
+                background-color: #f8f9fa; /* Match the background color behind the text */
+                box-shadow: none; /* Remove box shadow on mobile */
+                border-radius: 0; /* Remove rounded corners */
+                padding: 0; /* Remove container padding */
+            }
+
+            #content-display {
+                max-width: 100%; /* Allow text to fill the screen width */
+                font-size: 1em; /* Adjust font size for better readability */
+                margin: 0; /* Remove centering margins */
+            }
+
+            h1 {
+                margin-top: 10px; /* Provide a smaller top margin for the heading */
+                margin-bottom: 15px; /* Adjust bottom margin for spacing */
+            }
+        }
     </style>
 </head>
 <body>

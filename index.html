@@ -46,7 +46,7 @@
         }
 
         #content-display {
-            max-width: 80ch; /* Restrict to 80 characters per line */
+            max-width: 80ch;
             white-space: pre-wrap;
             overflow-wrap: break-word;
             word-wrap: break-word;
@@ -90,8 +90,8 @@
             }
 
             #content-display {
-                max-width: 100%; /* Allow text to fill the screen for mobile */
-                font-size: 1em; /* Ensure readability on smaller screens */
+                max-width: 100%;
+                font-size: 1em;
                 margin: 0;
             }
 
@@ -104,7 +104,8 @@
 </head>
 <body>
     <div class="container">
-        <h1><center><i>Work in Progress.</h1></center></i><br />
+        <h1>Some kind of fiction...</h1>
+        <center><i>Work in Progress.</i></center><br />
         <center>By Will Clingan</center><br />
         <div class="dynamic-link">
             <a id="last-entry-link" href="#">Read the Last Entry</a>
@@ -156,7 +157,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching Fantasy.txt:', error);
-                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and [...]
+                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and try again.</p>`;
                 });
 
             function renderEntry(entry) {

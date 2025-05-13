@@ -78,7 +78,14 @@
         .dynamic-link a:hover {
             text-decoration: underline;
         }
-
+        
+        /* Styles to limit text width to 80 characters */
+        p {
+          max-width: 80ch; /* Limits the width to 80 characters */
+          margin: 0 auto; /* Center-aligns the text block */
+          line-height: 1.5; /* Enhances readability */
+        }
+        
         /* Responsive adjustments for mobile */
         @media (max-width: 768px) {
             body {
@@ -119,7 +126,7 @@
             <p class="loading-message">Loading content from Fantasy.txt...</p>
         </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const contentDisplay = document.getElementById('content-display');
@@ -166,7 +173,7 @@
                 });
 
             function renderEntry(entry) {
-                contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '')}</p>`;
+                contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '<p></p>')}</p>`;
             }
         });
     </script>

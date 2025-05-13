@@ -6,11 +6,11 @@
     <title>Fantasy Text Viewer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         /* Basic styles and light theme (default) */
         body {
-            font-family: 'Noto Sans Mono', monospace;
+            font-family: 'Noto Sans', sans-serif;
             line-height: 1.7;
             margin: 0;
             padding: 20px;
@@ -131,7 +131,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching Fantasy.txt:', error);
-                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, th[...]
+                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, the repository is public, and there are no network issues.</p>`;
                 });
         });
     </script>

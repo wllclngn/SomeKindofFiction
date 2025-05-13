@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
-        /* Basic styles and light theme (default) */
         body {
             font-family: 'Noto Sans', sans-serif;
             line-height: 1.7;
@@ -16,7 +15,6 @@
             padding: 20px;
             background-color: #f8f9fa;
             color: #212529;
-            transition: background-color 0.3s ease, color 0.3s ease;
             display: flex;
             justify-content: center;
         }
@@ -28,7 +26,6 @@
             padding: 25px 30px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         h1 {
@@ -45,71 +42,10 @@
             word-wrap: break-word;
             font-size: 1.1em;
             color: #495057;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         #content-display p {
             margin-bottom: 1em;
-        }
-
-        /* Responsive adjustments for mobile */
-        @media (max-width: 768px) {
-            body {
-                display: block; /* Allow text to fill the screen */
-                padding: 10px; /* Reduce padding around the content */
-            }
-
-            .container {
-                width: 100%; /* Allow container to fill the screen */
-                margin: 0;
-                background-color: transparent; /* Use body background as the overall background */
-                box-shadow: none; /* Remove box shadow on mobile */
-                border-radius: 0; /* Remove rounded corners */
-                padding: 0; /* Remove container padding */
-            }
-
-            #content-display {
-                max-width: 100%; /* Allow text to fill the screen width */
-                font-size: 1em; /* Adjust font size for better readability */
-                margin: 0; /* Remove centering margins */
-            }
-
-            h1 {
-                margin-top: 10px; /* Provide a smaller top margin for the heading */
-                margin-bottom: 15px; /* Adjust bottom margin for spacing */
-            }
-        }
-
-        #content-display p.loading-message,
-        #content-display p.error-message {
-            text-align: center;
-            font-style: italic;
-            color: #6c757d;
-        }
-
-        /* Dark theme styles */
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #e9ecef;
-        }
-
-        body.dark-mode .container {
-            background-color: transparent;
-            box-shadow: none;
-        }
-
-        body.dark-mode h1 {
-            color: #f8f9fa;
-        }
-
-        body.dark-mode #content-display {
-            color: #ced4da;
-        }
-
-        body.dark-mode #content-display p.loading-message,
-        body.dark-mode #content-display p.error-message {
-            color: #adb5bd;
         }
 
         .dynamic-link {
@@ -142,21 +78,6 @@
     </div>
 
     <script>
-        function applyTheme(isDarkMode) {
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        }
-
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        applyTheme(prefersDarkScheme.matches);
-
-        prefersDarkScheme.addEventListener('change', (event) => {
-            applyTheme(event.matches);
-        });
-
         document.addEventListener('DOMContentLoaded', () => {
             const contentDisplay = document.getElementById('content-display');
             const lastEntryLink = document.getElementById('last-entry-link');
@@ -177,7 +98,9 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        const entries = text.split(/(?=●)/).map(entry => entry.trim()).filter(entry => entry);
+                        // Process text to remove single carriage returns but keep double carriage returns
+                        const processedText = text.replace(/([^\n])\n([^\n])/g, '$1 $2');
+                        const entries = processedText.split(/(?=●)/).map(entry => entry.trim()).filter(entry => entry);
 
                         // Create dynamic link to the last entry
                         const lastEntryIndex = entries.length - 1;

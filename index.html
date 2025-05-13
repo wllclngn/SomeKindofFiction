@@ -80,7 +80,7 @@
         }
         
         /* Styles to limit text width to 80 characters */
-        p {
+        desktop-width {
           max-width: 80ch; /* Limits the width to 80 characters */
           margin: 0 auto; /* Center-aligns the text block */
           line-height: 1.5; /* Enhances readability */
@@ -173,7 +173,7 @@
                 });
 
             function renderEntry(entry) {
-                contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '<p></p>')}</p>`;
+                contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '<p class="desktop-width"></p>')}</p>`;
             }
         });
     </script>

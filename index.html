@@ -46,7 +46,7 @@
         }
 
         #content-display {
-            max-width: 80ch;
+            max-width: 80ch; /* Restrict to 80 characters for desktop */
             white-space: pre-wrap;
             overflow-wrap: break-word;
             word-wrap: break-word;
@@ -90,8 +90,8 @@
             }
 
             #content-display {
-                max-width: 100%;
-                font-size: 1em;
+                max-width: 100%; /* Allow text to fill the screen for mobile */
+                font-size: 1em; /* Ensure readability on smaller screens */
                 margin: 0;
             }
 
@@ -104,7 +104,6 @@
 </head>
 <body>
     <div class="container">
-        <h1>Some kind of fiction...</h1>
         <center><i>Work in Progress.</i></center><br />
         <center>By Will Clingan</center><br />
         <div class="dynamic-link">

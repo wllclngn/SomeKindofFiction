@@ -17,13 +17,13 @@
             background-color: #f8f9fa;
             color: #212529;
             transition: background-color 0.3s ease, color 0.3s ease;
-            display: flex; /* For centering the content container */
-            justify-content: center; /* For centering the content container */
+            display: flex;
+            justify-content: center;
         }
 
         .container {
-            width: fit-content; /* Allow container to shrink to content-display's width */
-            margin: 20px; /* Provide some margin around the container */
+            width: fit-content;
+            margin: 20px;
             background-color: #ffffff;
             padding: 25px 30px;
             border-radius: 8px;
@@ -39,24 +39,45 @@
         }
 
         #content-display {
-            max-width: 80ch; /* Set max width to 80 character units */
-            white-space: pre-wrap; /* Preserves existing line breaks and wraps text */
-            overflow-wrap: break-word; /* Ensures long words break and wrap (standard property) */
-            word-wrap: break-word; /* Older property for wider browser compatibility */
+            max-width: 80ch;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
             font-size: 1.1em;
             color: #495057;
-            margin-left: auto; /* Center the block if it's narrower than container */
-            margin-right: auto; /* Center the block if it's narrower than container */
+            margin-left: auto;
+            margin-right: auto;
         }
 
         #content-display p {
-            margin-bottom: 1em; /* Keep paragraphs visually separate */
+            margin-bottom: 1em;
         }
 
         /* Responsive adjustments for mobile */
         @media (max-width: 768px) {
+            body {
+                display: block; /* Allow text to fill the screen */
+                padding: 10px; /* Reduce padding around the content */
+            }
+
+            .container {
+                width: 100%; /* Allow container to fill the screen */
+                margin: 0;
+                background-color: transparent; /* Use body background as the overall background */
+                box-shadow: none; /* Remove box shadow on mobile */
+                border-radius: 0; /* Remove rounded corners */
+                padding: 0; /* Remove container padding */
+            }
+
             #content-display {
-                max-width: 80%; /* Adjust to a percentage-based width for smaller screens */
+                max-width: 100%; /* Allow text to fill the screen width */
+                font-size: 1em; /* Adjust font size for better readability */
+                margin: 0; /* Remove centering margins */
+            }
+
+            h1 {
+                margin-top: 10px; /* Provide a smaller top margin for the heading */
+                margin-bottom: 15px; /* Adjust bottom margin for spacing */
             }
         }
 
@@ -74,8 +95,8 @@
         }
 
         body.dark-mode .container {
-            background-color: #2c2c2c;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            background-color: transparent;
+            box-shadow: none;
         }
 
         body.dark-mode h1 {
@@ -122,7 +143,7 @@
             const contentDisplay = document.getElementById('content-display');
             const owner = 'wllclngn';
             const repo = 'SomeKindofFiction';
-            const branch = 'main'; // Ensure this is your default branch
+            const branch = 'main';
             const filePath = 'Fantasy.txt';
             const rawFileURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
 
@@ -137,8 +158,7 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        // Split content into paragraphs for better readability
-                        const paragraphs = text.split(/\n\s*\n/); // Split on double newlines
+                        const paragraphs = text.split(/\n\s*\n/);
                         contentDisplay.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
                     }
                 })

@@ -177,7 +177,7 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        const entries = text.split('●').map(entry => entry.trim()).filter(entry => entry);
+                        const entries = text.split(/(?=●)/).map(entry => entry.trim()).filter(entry => entry);
 
                         // Create dynamic link to the last entry
                         const lastEntryIndex = entries.length - 1;

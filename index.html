@@ -46,7 +46,7 @@
         }
 
         #content-display {
-            max-width: 80ch; /* Restrict to 80 characters for desktop */
+            max-width: 80ch; /* Restrict to 80 characters per line */
             white-space: pre-wrap;
             overflow-wrap: break-word;
             word-wrap: break-word;
@@ -156,7 +156,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching Fantasy.txt:', error);
-                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and that it is accessible.</p>`;
+                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and [...]
                 });
 
             function renderEntry(entry) {

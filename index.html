@@ -6,10 +6,20 @@
     <title>Fantasy Text Viewer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
+        /* Custom Font Definition */
+        @font-face {
+            font-family: 'Novela Regular';
+            src: url('./fonts/Novela-Regular.woff2') format('woff2'),
+                 url('./fonts/Novela-Regular.woff') format('woff'),
+                 url('./fonts/Novela-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* Apply the Custom Font */
         body {
-            font-family: 'Noto Sans', sans-serif;
+            font-family: 'Novela Regular', sans-serif;
             line-height: 1.7;
             margin: 0;
             padding: 20px;
@@ -66,38 +76,39 @@
         /* Responsive adjustments for mobile */
         @media (max-width: 768px) {
             body {
-                display: block; /* Allow text to fill the screen */
-                padding: 10px; /* Reduce padding around the content */
+                display: block;
+                padding: 10px;
             }
 
             .container {
-                width: 100%; /* Allow container to fill the screen */
+                width: 100%;
                 margin: 0;
-                background-color: #f8f9fa; /* Match the background color behind the text */
-                box-shadow: none; /* Remove box shadow on mobile */
-                border-radius: 0; /* Remove rounded corners */
-                padding: 0; /* Remove container padding */
+                background-color: #f8f9fa;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
             }
 
             #content-display {
-                max-width: 100%; /* Allow text to fill the screen width */
-                font-size: 1em; /* Adjust font size for better readability */
-                margin: 0; /* Remove centering margins */
+                max-width: 100%;
+                font-size: 1em;
+                margin: 0;
             }
 
             h1 {
-                margin-top: 10px; /* Provide a smaller top margin for the heading */
-                margin-bottom: 15px; /* Adjust bottom margin for spacing */
+                margin-top: 10px;
+                margin-bottom: 15px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1><i></i>Work in Progress.</i></h1>
+        <h1>Some kind of fiction...</h1>
+        <center><i>Work in Progress.</i></center><br />
         <center>By Will Clingan</center><br />
         <div class="dynamic-link">
-            <a id="last-entry-link" href="#">Read the Latest Entry</a>
+            <a id="last-entry-link" href="#">Read the Last Entry</a>
         </div>
         <div id="content-display">
             <p class="loading-message">Loading content from Fantasy.txt...</p>
@@ -125,11 +136,9 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        // Process text to remove single carriage returns but keep double carriage returns
                         const processedText = text.replace(/([^\n])\n([^\n])/g, '$1 $2');
                         const entries = processedText.split(/(?=●)/).map(entry => entry.trim()).filter(entry => entry);
 
-                        // Create dynamic link to the last entry
                         const lastEntryIndex = entries.length - 1;
                         lastEntryLink.href = `?entry=${lastEntryIndex}`;
                         lastEntryLink.addEventListener('click', (event) => {
@@ -137,13 +146,12 @@
                             renderEntry(entries[lastEntryIndex]);
                         });
 
-                        // Check URL query parameter to display an entry
                         const urlParams = new URLSearchParams(window.location.search);
                         const entryIndex = urlParams.get('entry');
                         if (entryIndex !== null && entries[entryIndex]) {
                             renderEntry(entries[entryIndex]);
                         } else {
-                            renderEntry(entries.join('\n\n')); // Render all entries by default
+                            renderEntry(entries.join('\n\n'));
                         }
                     }
                 })

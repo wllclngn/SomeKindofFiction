@@ -55,7 +55,7 @@
         }
 
         #content-display p {
-            margin-bottom: 1em;
+            margin-bottom: 0.5em;
         }
 
         .dynamic-link {
@@ -104,8 +104,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Some kind of fiction...</h1>
-        <center><i>Work in Progress.</i></center><br />
+        <h1><center><i>Work in Progress.</i></center></h1><br />
         <center>By Will Clingan</center><br />
         <div class="dynamic-link">
             <a id="last-entry-link" href="#">Read the Last Entry</a>
@@ -149,7 +148,7 @@
                         const urlParams = new URLSearchParams(window.location.search);
                         const entryIndex = urlParams.get('entry');
                         if (entryIndex !== null && entries[entryIndex]) {
-                            renderEntry(entries[entryIndex]);
+                            renderEntry(formatToEightyCharacters(entries[entryIndex]));
                         } else {
                             renderEntry(formatToEightyCharacters(entries.join('\n\n')));
                         }
@@ -182,7 +181,7 @@
                     lines.push(currentLine.trim());
                 }
 
-                return lines.join('\n');
+                return lines.join('\n'); // Maintain single spacing
             }
         });
     </script>

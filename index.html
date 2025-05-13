@@ -49,6 +49,17 @@
             margin-right: auto; /* Center the block if it's narrower than container */
         }
 
+        #content-display p {
+            margin-bottom: 1em; /* Keep paragraphs visually separate */
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            #content-display {
+                max-width: 80%; /* Adjust to a percentage-based width for smaller screens */
+            }
+        }
+
         #content-display p.loading-message,
         #content-display p.error-message {
             text-align: center;
@@ -126,12 +137,14 @@
                     if (text.trim() === '') {
                         contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
                     } else {
-                        contentDisplay.textContent = text;
+                        // Split content into paragraphs for better readability
+                        const paragraphs = text.split(/\n\s*\n/); // Split on double newlines
+                        contentDisplay.innerHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching Fantasy.txt:', error);
-                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, the repository is public, and there are no network issues.</p>`;
+                    contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, the[...]
                 });
         });
     </script>

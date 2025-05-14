@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error fetching Fantasy.txt:', error);
-            contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and that the file contains valid content.</p>`;
+            contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and try again.</p>`;
         });
 
     function renderEntry(entry) {

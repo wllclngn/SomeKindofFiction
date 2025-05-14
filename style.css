@@ -24,7 +24,8 @@ body {
 }
 
 .container {
-  width: fit-content;
+  width: 100%;
+  max-width: 80ch;
   margin: 20px;
   background-color: #181818;
   padding: 25px 30px;
@@ -32,7 +33,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+h1.title {
   color: #FFFFFF;
   text-align: center;
   margin-bottom: 25px;
@@ -44,7 +45,7 @@ h1 {
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  font-size: 1.1em;
+  font-size: 1em;
   color: #E7E7E7;
 }
 
@@ -67,7 +68,7 @@ h1 {
   text-decoration: underline;
 }
 
-desktop-width {
+.desktop-width {
   max-width: 80ch;
   margin: 0 auto;
   line-height: 1.5;
@@ -94,7 +95,7 @@ desktop-width {
     margin: 0;
   }
 
-  h1 {
+  h1.title {
     margin-top: 10px;
     margin-bottom: 15px;
   }

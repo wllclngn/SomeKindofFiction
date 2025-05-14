@@ -1,5 +1,3 @@
-// JavaScript extracted from index.html
-
 document.addEventListener('DOMContentLoaded', () => {
     const contentDisplay = document.getElementById('content-display');
     const lastEntryLink = document.getElementById('last-entry-link');

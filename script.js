@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filePath = 'Fantasy.txt';
     const rawFileURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
 
+    // Fetch the content of Fantasy.txt
     fetch(rawFileURL)
         .then(response => {
             if (!response.ok) {
@@ -16,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(text => {
             if (text.trim() === '') {
-                contentDisplay.innerHTML = '<p class="error-message">Fantasy.txt appears to be empty.</p>';
+                displayErrorMessage('Fantasy.txt appears to be empty.');
             } else {
-                const processedText = text.replace(/([^\n])\n([^\n])/g, '$1 $2');
-                const entries = processedText.split(/(?=●)/).map(entry => entry.trim()).filter(entry => entry);
+                const processedText = preprocessText(text);
+                const entries = splitEntries(processedText);
 
                 const lastEntryIndex = entries.length - 1;
                 lastEntryLink.href = `?entry=${lastEntryIndex}`;
@@ -28,8 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderEntry(entries[lastEntryIndex]);
                 });
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const entryIndex = urlParams.get('entry');
+                const entryIndex = new URLSearchParams(window.location.search).get('entry');
                 if (entryIndex !== null && entries[entryIndex]) {
                     renderEntry(entries[entryIndex]);
                 } else {
@@ -39,10 +39,26 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => {
             console.error('Error fetching Fantasy.txt:', error);
-            contentDisplay.innerHTML = `<p class="error-message">Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and try again.</p>`;
+            displayErrorMessage(`Error loading content from ${filePath}.<br>Please ensure the file exists at the correct path in the '${branch}' branch, and try again.`);
         });
 
     function renderEntry(entry) {
-        contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '<p class="desktop-width"></p>')}</p>`;
+        contentDisplay.innerHTML = `<p>${entry.replace(/\n/g, '<br>')}</p>`;
+    }
+
+    function preprocessText(text) {
+        // Collapse single newlines into spaces
+        return text.replace(/([^\n])\n([^\n])/g, '$1 $2');
+    }
+
+    function splitEntries(text) {
+        return text
+            .split(/(?=\u25cf)/)
+            .map(entry => entry.trim())
+            .filter(entry => entry);
+    }
+
+    function displayErrorMessage(message) {
+        contentDisplay.innerHTML = `<p class="error-message">${message}</p>`;
     }
 });

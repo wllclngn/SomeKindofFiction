@@ -2,6 +2,7 @@ import os
 import json
 import requests
 
+# JUST ADDING SOMETHING FOR A PUSH TEST, GITHUB ACTIONS
 # Secrets from GitHub Actions environment variables
 client_id = os.environ.get('ONEDRIVE_CLIENT_ID')
 client_secret = os.environ.get('ONEDRIVE_CLIENT_SECRET')
@@ -46,7 +47,11 @@ if not from_address:
     print("MAIL_FROM_ADDRESS environment variable is not set. Cannot determine target OneDrive user.")
     exit(1)
 
+email_recipients.txt
+
 file_content_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/drive/root:/{onedrive_file_path}:/content"
+file_content_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/drive/root:/{onedrive_file_path}:/content"
+
 
 headers_onedrive = {
     'Authorization': 'Bearer ' + access_token

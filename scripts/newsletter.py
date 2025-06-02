@@ -7,7 +7,6 @@ client_id = os.environ.get('ONEDRIVE_CLIENT_ID')
 client_secret = os.environ.get('ONEDRIVE_CLIENT_SECRET')
 tenant_id = os.environ.get('ONEDRIVE_TENANT_ID')
 from_address = os.environ.get('ONEDRIVE_EMAIL')
-to_addresses = os.environ.get('MAIL_TO_ADDRESSES').split(',') # Assuming comma-separated
 
 # Newsletter content (can be dynamic)
 subject = "Your Awesome Newsletter!"
@@ -37,7 +36,42 @@ if not access_token:
     print("Failed to get access token.")
     exit(1)
 
-# 2. Send Email using Microsoft Graph API
+print("Access token obtained successfully.")
+
+# 2. Fetch Newsletter Recipients from OneDrive
+onedrive_file_path = "email_recipients.txt"
+# Construct the URL for the Graph API to get file content from the user's OneDrive root
+# This assumes the script is run in a context where "/me" refers to the user whose OneDrive is being accessed.
+# If using application permissions for a specific drive, the URL might need adjustment (e.g., /users/{user-id}/drive/root:...)
+file_content_url = f"https://graph.microsoft.com/v1.0/me/drive/root:/{onedrive_file_path}:/content"
+
+headers_onedrive = {
+    'Authorization': 'Bearer ' + access_token
+}
+
+print(f"Attempting to fetch recipient list from OneDrive: {onedrive_file_path}")
+file_r = requests.get(file_content_url, headers=headers_onedrive)
+
+to_addresses = []
+if file_r.status_code == 200:
+    print("Successfully fetched recipient file from OneDrive.")
+    # Assuming the file content is plain text with one email address per line
+    recipients_text = file_r.text
+    to_addresses = [line.strip() for line in recipients_text.splitlines() if line.strip()]
+    if not to_addresses:
+        print("Recipient file is empty or contains no valid email addresses.")
+        exit(1)
+    print(f"Recipients loaded: {', '.join(to_addresses)}")
+else:
+    print(f"Failed to fetch recipient file from OneDrive: {file_r.status_code}")
+    try:
+        print(file_r.json()) # Print error details if available
+    except json.JSONDecodeError:
+        print(file_r.text) # Print raw text if not JSON
+    exit(1)
+
+
+# 3. Send Email using Microsoft Graph API
 send_mail_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/sendMail"
 
 email_msg = {
@@ -55,16 +89,20 @@ email_msg = {
     'saveToSentItems': 'true'
 }
 
-headers = {
+headers_sendmail = {
     'Authorization': 'Bearer ' + access_token,
     'Content-Type': 'application/json'
 }
 
-response = requests.post(send_mail_url, headers=headers, data=json.dumps(email_msg))
+print("Attempting to send email...")
+response = requests.post(send_mail_url, headers=headers_sendmail, data=json.dumps(email_msg))
 
 if response.status_code == 202: # 202 Accepted
     print("Email sent successfully!")
 else:
     print(f"Failed to send email: {response.status_code}")
-    print(response.json())
+    try:
+        print(response.json())
+    except json.JSONDecodeError:
+        print(response.text)
     exit(1)

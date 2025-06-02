@@ -1,0 +1,40 @@
+name: Send Newsletter
+
+on:
+  # Define your trigger, e.g., push to main, schedule, workflow_dispatch
+  push:
+    branches: [ main ] # Example: on push to main
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  send_email_job:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Checkout your repository to access the Python script
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up a Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' # Or specify a more precise version like '3.9'
+
+      # 3. Install the Python script's dependencies
+      - name: Install dependencies
+        run: pip install requests
+
+      # 4. Run your Python script
+      - name: Send the email
+        env:
+          # These secrets are passed as environment variables to your Python script
+          # The script then accesses them using os.environ.get()
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
+          MAIL_TO_ADDRESSES: ${{ secrets.MAIL_TO_ADDRESSES }} # e.g., "user1@example.com,user2@example.com"
+        # This command executes your Python script.
+        # Make sure 'send_email.py' is the correct path to your script
+        # relative to the root of your repository.
+        run: python send_email.py

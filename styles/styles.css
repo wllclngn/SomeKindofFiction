@@ -10,13 +10,13 @@
 
 @font-face {
   font-family: 'Novela Regular';
-  src: url('fonts/Novela-Regular.otf') format('opentype');
+  src: url('./fonts/Novela-Regular.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: 'Novela Regular', 'Noto Sans', sans-serif;
+  font-family: 'Novela Regular', sans-serif;
   line-height: 1.7;
   margin: 0;
   padding: 20px;

@@ -2,7 +2,6 @@ import os
 import json
 import requests
 
-# JUST ADDING SOMETHING FOR A PUSH TEST, GITHUB ACTIONS
 # Secrets from GitHub Actions environment variables
 client_id = os.environ.get('ONEDRIVE_CLIENT_ID')
 client_secret = os.environ.get('ONEDRIVE_CLIENT_SECRET')

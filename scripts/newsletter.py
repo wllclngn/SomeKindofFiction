@@ -3,10 +3,10 @@ import json
 import requests
 
 # Secrets from GitHub Actions environment variables
-client_id = os.environ.get('AZURE_CLIENT_ID')
-client_secret = os.environ.get('AZURE_CLIENT_SECRET')
-tenant_id = os.environ.get('AZURE_TENANT_ID')
-from_address = os.environ.get('MAIL_FROM_ADDRESS')
+client_id = os.environ.get('ONEDRIVE_CLIENT_ID')
+client_secret = os.environ.get('ONEDRIVE_CLIENT_SECRET')
+tenant_id = os.environ.get('ONEDRIVE_TENANT_ID')
+from_address = os.environ.get('ONEDRIVE_EMAIL')
 to_addresses = os.environ.get('MAIL_TO_ADDRESSES').split(',') # Assuming comma-separated
 
 # Newsletter content (can be dynamic)

@@ -1,5 +1,4 @@
 # robots.txt file for Work in Progress.
-# This file controls the behavior of web crawlers for this project.
 
 User-agent: *
 Disallow: /private/

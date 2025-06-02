@@ -16,7 +16,7 @@
 }
 
 body {
-  font-family: 'Novela Regular', sans-serif;
+  font-family: 'Novela Regular', 'Noto Sans', sans-serif;
   line-height: 1.7;
   margin: 0;
   padding: 20px;
@@ -84,6 +84,7 @@ h1.title {
     box-shadow: none;
     border-radius: 0;
     padding: 0;
+    font-family: 'Novela Regular';
   }
 
   #content-display {

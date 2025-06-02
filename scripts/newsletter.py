@@ -2,6 +2,7 @@ import os
 import json
 import requests
 
+# "There isn't anything to compare..."
 # Secrets from GitHub Actions environment variables
 client_id = os.environ.get('ONEDRIVE_CLIENT_ID')
 client_secret = os.environ.get('ONEDRIVE_CLIENT_SECRET')

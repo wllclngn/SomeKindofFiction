@@ -80,6 +80,7 @@ h1.title {
   .container {
     width: 100%;
     margin: 0;
+    font-family: 'Novela Regular', sans-serif;
     background-color: #181818;
     box-shadow: none;
     border-radius: 0;

@@ -47,11 +47,7 @@ if not from_address:
     print("MAIL_FROM_ADDRESS environment variable is not set. Cannot determine target OneDrive user.")
     exit(1)
 
-email_recipients.txt
-
 file_content_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/drive/root:/{onedrive_file_path}:/content"
-file_content_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/drive/root:/{onedrive_file_path}:/content"
-
 
 headers_onedrive = {
     'Authorization': 'Bearer ' + access_token

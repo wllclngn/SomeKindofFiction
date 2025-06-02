@@ -37,4 +37,6 @@ jobs:
         # This command executes your Python script.
         # Make sure 'send_email.py' is the correct path to your script
         # relative to the root of your repository.
-        run: python scripts/newsletter.py
+        
+        ##################################
+        #run: python scripts/newsletter.py

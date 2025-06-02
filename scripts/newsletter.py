@@ -2,12 +2,12 @@ import os
 import json
 import requests
 
+# "There isn't anything to compare..."
 # Secrets from GitHub Actions environment variables
-client_id = os.environ.get('AZURE_CLIENT_ID')
-client_secret = os.environ.get('AZURE_CLIENT_SECRET')
-tenant_id = os.environ.get('AZURE_TENANT_ID')
-from_address = os.environ.get('MAIL_FROM_ADDRESS')
-to_addresses = os.environ.get('MAIL_TO_ADDRESSES').split(',') # Assuming comma-separated
+client_id = os.environ.get('ONEDRIVE_CLIENT_ID')
+client_secret = os.environ.get('ONEDRIVE_CLIENT_SECRET')
+tenant_id = os.environ.get('ONEDRIVE_TENANT_ID')
+from_address = os.environ.get('ONEDRIVE_EMAIL')
 
 # Newsletter content (can be dynamic)
 subject = "Your Awesome Newsletter!"
@@ -37,7 +37,45 @@ if not access_token:
     print("Failed to get access token.")
     exit(1)
 
-# 2. Send Email using Microsoft Graph API
+print("Access token obtained successfully.")
+
+# 2. Fetch Newsletter Recipients from OneDrive
+onedrive_file_path = "email_recipients.txt" # Ensure this is the correct path in the root of the specified user's OneDrive
+
+# IMPORTANT: Use the specific user's UPN (from_address) instead of /me
+if not from_address:
+    print("MAIL_FROM_ADDRESS environment variable is not set. Cannot determine target OneDrive user.")
+    exit(1)
+
+file_content_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/drive/root:/{onedrive_file_path}:/content"
+
+headers_onedrive = {
+    'Authorization': 'Bearer ' + access_token
+}
+
+print(f"Attempting to fetch recipient list from OneDrive user {from_address}, path: {onedrive_file_path}")
+print(f"Request URL: {file_content_url}") # Adding this for debugging
+file_r = requests.get(file_content_url, headers=headers_onedrive)
+
+to_addresses = []
+if file_r.status_code == 200:
+    print("Successfully fetched recipient file from OneDrive.")
+    recipients_text = file_r.text
+    to_addresses = [line.strip() for line in recipients_text.splitlines() if line.strip()]
+    if not to_addresses:
+        print("Recipient file is empty or contains no valid email addresses.")
+        exit(1) # Or handle as a non-fatal error if sending to no one is acceptable
+    print(f"Recipients loaded: {len(to_addresses)} address(es).")
+else:
+    print(f"Failed to fetch recipient file from OneDrive: {file_r.status_code}")
+    try:
+        print(file_r.json())
+    except json.JSONDecodeError:
+        print(file_r.text)
+    exit(1)
+
+
+# 3. Send Email using Microsoft Graph API
 send_mail_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/sendMail"
 
 email_msg = {
@@ -50,21 +88,24 @@ email_msg = {
         'toRecipients': [
             {'emailAddress': {'address': addr.strip()}} for addr in to_addresses
         ]
-        # You can add ccRecipients, bccRecipients, attachments etc.
     },
     'saveToSentItems': 'true'
 }
 
-headers = {
+headers_sendmail = {
     'Authorization': 'Bearer ' + access_token,
     'Content-Type': 'application/json'
 }
 
-response = requests.post(send_mail_url, headers=headers, data=json.dumps(email_msg))
+print("Attempting to send email...")
+response = requests.post(send_mail_url, headers=headers_sendmail, data=json.dumps(email_msg))
 
-if response.status_code == 202: # 202 Accepted
+if response.status_code == 202:
     print("Email sent successfully!")
 else:
     print(f"Failed to send email: {response.status_code}")
-    print(response.json())
+    try:
+        print(response.json())
+    except json.JSONDecodeError:
+        print(response.text)
     exit(1)

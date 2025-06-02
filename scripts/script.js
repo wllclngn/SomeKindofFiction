@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const owner = 'wllclngn';
     const repo = 'SomeKindofFiction';
     const branch = 'main';
-    const filePath = '/src/Fantasy.txt';
+    const filePath = 'src/Fantasy.txt';
     const rawFileURL = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
 
     // Fetch the content of Fantasy.txt

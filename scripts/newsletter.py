@@ -39,35 +39,38 @@ if not access_token:
 print("Access token obtained successfully.")
 
 # 2. Fetch Newsletter Recipients from OneDrive
-onedrive_file_path = "email_recipients.txt"
-# Construct the URL for the Graph API to get file content from the user's OneDrive root
-# This assumes the script is run in a context where "/me" refers to the user whose OneDrive is being accessed.
-# If using application permissions for a specific drive, the URL might need adjustment (e.g., /users/{user-id}/drive/root:...)
-file_content_url = f"https://graph.microsoft.com/v1.0/me/drive/root:/{onedrive_file_path}:/content"
+onedrive_file_path = "email_recipients.txt" # Ensure this is the correct path in the root of the specified user's OneDrive
+
+# IMPORTANT: Use the specific user's UPN (from_address) instead of /me
+if not from_address:
+    print("MAIL_FROM_ADDRESS environment variable is not set. Cannot determine target OneDrive user.")
+    exit(1)
+
+file_content_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/drive/root:/{onedrive_file_path}:/content"
 
 headers_onedrive = {
     'Authorization': 'Bearer ' + access_token
 }
 
-print(f"Attempting to fetch recipient list from OneDrive: {onedrive_file_path}")
+print(f"Attempting to fetch recipient list from OneDrive user {from_address}, path: {onedrive_file_path}")
+print(f"Request URL: {file_content_url}") # Adding this for debugging
 file_r = requests.get(file_content_url, headers=headers_onedrive)
 
 to_addresses = []
 if file_r.status_code == 200:
     print("Successfully fetched recipient file from OneDrive.")
-    # Assuming the file content is plain text with one email address per line
     recipients_text = file_r.text
     to_addresses = [line.strip() for line in recipients_text.splitlines() if line.strip()]
     if not to_addresses:
         print("Recipient file is empty or contains no valid email addresses.")
-        exit(1)
-    print(f"Recipients loaded: {', '.join(to_addresses)}")
+        exit(1) # Or handle as a non-fatal error if sending to no one is acceptable
+    print(f"Recipients loaded: {len(to_addresses)} address(es).")
 else:
     print(f"Failed to fetch recipient file from OneDrive: {file_r.status_code}")
     try:
-        print(file_r.json()) # Print error details if available
+        print(file_r.json())
     except json.JSONDecodeError:
-        print(file_r.text) # Print raw text if not JSON
+        print(file_r.text)
     exit(1)
 
 
@@ -84,7 +87,6 @@ email_msg = {
         'toRecipients': [
             {'emailAddress': {'address': addr.strip()}} for addr in to_addresses
         ]
-        # You can add ccRecipients, bccRecipients, attachments etc.
     },
     'saveToSentItems': 'true'
 }
@@ -97,7 +99,7 @@ headers_sendmail = {
 print("Attempting to send email...")
 response = requests.post(send_mail_url, headers=headers_sendmail, data=json.dumps(email_msg))
 
-if response.status_code == 202: # 202 Accepted
+if response.status_code == 202:
     print("Email sent successfully!")
 else:
     print(f"Failed to send email: {response.status_code}")

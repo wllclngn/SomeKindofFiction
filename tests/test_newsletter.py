@@ -6,13 +6,14 @@ from pathlib import Path
 
 # Add parent directory to Python path for importing newsletter.py
 sys.path.append(str(Path(__file__).parent.parent))
-from scripts.newsletter import send_newsletter
 
 def load_test_config():
     """Load test configuration from JSON file."""
     config_path = Path(__file__).parent / 'config' / 'test_config.json'
     with open(config_path, 'r') as f:
-        return json.load(f)
+        config = json.load(f)
+    print("DEBUG: Loaded test config:", {k: ('<REDACTED>' if 'secret' in k else v) for k, v in config.items()})
+    return config
 
 def setup_test_environment():
     """Setup test environment variables from config."""
@@ -21,11 +22,18 @@ def setup_test_environment():
     os.environ['ONEDRIVE_CLIENT_SECRET'] = config['client_secret']
     os.environ['ONEDRIVE_TENANT_ID'] = config['tenant_id']
     os.environ['ONEDRIVE_EMAIL'] = config['from_address']
+    print("DEBUG: Environment variables set:")
+    print("  ONEDRIVE_CLIENT_ID:", os.environ.get('ONEDRIVE_CLIENT_ID'))
+    print("  ONEDRIVE_CLIENT_SECRET length:", len(os.environ.get('ONEDRIVE_CLIENT_SECRET')) if os.environ.get('ONEDRIVE_CLIENT_SECRET') else None)
+    print("  ONEDRIVE_TENANT_ID:", os.environ.get('ONEDRIVE_TENANT_ID'))
+    print("  ONEDRIVE_EMAIL:", os.environ.get('ONEDRIVE_EMAIL'))
     return config
 
 def test_single_recipient():
     """Test sending newsletter to a single recipient."""
     config = setup_test_environment()
+    # Import here, after env vars are set!
+    from scripts.newsletter import send_newsletter
     try:
         send_newsletter(
             recipients=[config['test_recipient']],
@@ -39,6 +47,8 @@ def test_single_recipient():
 def test_multiple_recipients():
     """Test sending newsletter to multiple recipients from file."""
     setup_test_environment()
+    # Import here, after env vars are set!
+    from scripts.newsletter import send_newsletter
     recipients_path = Path(__file__).parent / 'config' / 'test_recipients.txt'
     try:
         with open(recipients_path, 'r') as f:

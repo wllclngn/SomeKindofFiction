@@ -1,8 +1,8 @@
 import os
 import json
 import sys
-from datetime import datetime
 from pathlib import Path
+from datetime import datetime, timezone
 
 # Add parent directory to Python path for importing newsletter.py
 sys.path.append(str(Path(__file__).parent.parent))
@@ -40,9 +40,9 @@ def test_single_recipient():
             subject="Test Newsletter",
             template_path=str(Path(__file__).parent / 'templates' / 'test_email_template.html')
         )
-        print("✅ Single recipient test completed successfully")
+        print("SUCCESS: Single recipient test completed successfully")
     except Exception as e:
-        print(f"❌ Single recipient test failed: {str(e)}")
+        print(f"ERROR: Single recipient test failed: {str(e)}")
 
 def test_multiple_recipients():
     """Test sending newsletter to multiple recipients from file."""
@@ -58,9 +58,9 @@ def test_multiple_recipients():
             subject="Test Newsletter - Multiple Recipients",
             template_path=str(Path(__file__).parent / 'templates' / 'test_email_template.html')
         )
-        print("✅ Multiple recipients test completed successfully")
+        print("SUCCESS: Multiple recipients test completed successfully")
     except Exception as e:
-        print(f"❌ Multiple recipients test failed: {str(e)}")
+        print(f"ERROR: Multiple recipients test failed: {str(e)}")
 
 def test_template_rendering():
     """Test template rendering with different variables."""
@@ -70,19 +70,19 @@ def test_template_rendering():
         with open(template_path, 'r') as f:
             template = f.read()
         rendered = template.format(
-            timestamp=datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC'),
+            timestamp=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC'),
             recipient_name="Test User"
         )
-        print("✅ Template rendering test completed successfully")
+        print("SUCCESS: Template rendering test completed successfully")
         print("Preview of rendered template:")
         print("-" * 50)
         print(rendered)
         print("-" * 50)
     except Exception as e:
-        print(f"❌ Template rendering test failed: {str(e)}")
+        print(f"ERROR: Template rendering test failed: {str(e)}")
 
 if __name__ == "__main__":
-    print("🚀 Starting newsletter tests...")
+    print("Starting newsletter tests...")
     print("\n1. Testing single recipient delivery...")
     test_single_recipient()
     print("\n2. Testing multiple recipients delivery...")

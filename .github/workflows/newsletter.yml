@@ -18,7 +18,16 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        run: pip install requests
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests google-cloud-firestore
+
+      - name: Set up Firestore credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY_JSON }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT_KEY_JSON" > "${GITHUB_WORKSPACE}/service_account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=${GITHUB_WORKSPACE}/service_account.json" >> $GITHUB_ENV
 
       - name: Send the email
         env:
@@ -27,5 +36,5 @@ jobs:
           ONEDRIVE_TENANT_ID: ${{ secrets.ONEDRIVE_TENANT_ID }}
           ONEDRIVE_EMAIL: ${{ secrets.ONEDRIVE_EMAIL }} # For the 'From' address
           ONEDRIVE_MSA_USER_ID: ${{ secrets.ONEDRIVE_MSA_USER_ID }} # The new secret for OneDrive User ID
-        
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
         run: python scripts/newsletter.py

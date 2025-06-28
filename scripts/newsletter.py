@@ -2,6 +2,7 @@ import os
 import json
 import requests
 from google.cloud import firestore
+import base64
 
 def get_access_token():
     # Get OAuth2 access token from Microsoft Graph API (for sending email).
@@ -26,6 +27,18 @@ def get_access_token():
     
     if not access_token:
         raise ValueError("Failed to get MS Graph access token")
+    
+    # Print access token claims for debugging (base64 decode JWT payload)
+    # This helps diagnose 401 errors by showing what the token is valid for
+    try:
+        parts = access_token.split('.')
+        if len(parts) > 1:
+            claims_json = base64.urlsafe_b64decode(parts[1] + '=' * (-len(parts[1]) % 4)).decode('utf-8')
+            claims = json.loads(claims_json)
+            print("# DEBUG: Access Token Claims:")
+            print(json.dumps(claims, indent=2))
+    except Exception as e:
+        print(f"# WARNING: Could not decode access token claims: {e}")
     
     return access_token
 
@@ -97,12 +110,11 @@ def send_newsletter(recipients=None, subject=None, content_html=None, template_p
         print("Recipients not provided directly, attempting to fetch from Firestore...")
         try:
             # project_id will be read from FIREBASE_PROJECT_ID env var by fetch_recipients_from_firestore
-            # The document_id is now correctly set to "email_recipients" in the function default
             recipients = fetch_recipients_from_firestore() 
         except Exception as e:
             raise ValueError(f"Failed to fetch recipients from Firestore and none were provided: {e}")
 
-    if not recipients: # Double check after attempting to fetch
+    if not recipients:
         raise ValueError("No recipients specified or found in Firestore.")
 
     send_mail_url = f"https://graph.microsoft.com/v1.0/users/{from_address}/sendMail"
@@ -131,9 +143,10 @@ def send_newsletter(recipients=None, subject=None, content_html=None, template_p
         error_msg = f"Failed to send email: {response.status_code}"
         try:
             error_details = response.json()
-            error_msg += f" - {error_details}"
+            error_msg += f" - {json.dumps(error_details, indent=2)}"
         except json.JSONDecodeError:
             error_msg += f" - {response.text}"
+        print(f"ERROR: {error_msg}")
         raise Exception(error_msg)
 
 def main():
@@ -147,11 +160,9 @@ def main():
         firebase_project_id = os.environ.get('FIREBASE_PROJECT_ID')
         if not firebase_project_id:
             print("FIREBASE_PROJECT_ID environment variable is not set. This is required for fetching recipients from Firestore.")
-            # The script will try to fetch recipients; send_newsletter will raise an error if it fails and no recipients are passed.
-            # For the main() execution path, it's essential.
 
         # Get access token for Microsoft Graph API (to send the email)
-        ms_graph_access_token = get_access_token() 
+        ms_graph_access_token = get_access_token()
         print("MS Graph Access token obtained successfully.")
         
         # Call send_newsletter. It will fetch recipients from Firestore.

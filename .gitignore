@@ -1,2 +1,3 @@
 tests/config/*
 *.patch
+**/__pycache__/
